@@ -1,0 +1,134 @@
+// Sombhabona x SDC — "One Donation, Change Two Lives" platform schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         String   @default("ADMIN") // ADMIN | SUPER_ADMIN
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Donor {
+  id           String      @id @default(cuid())
+  name         String
+  email        String      @unique
+  passwordHash String
+  phone        String?
+  country      String?
+  city         String?
+  avatarColor  String      @default("#0d9488")
+  bio          String?
+  isPublic     Boolean     @default(true)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  donations    Donation[]
+}
+
+model Child {
+  id              String           @id @default(cuid())
+  name            String
+  age             Int
+  gender          String           @default("female")
+  grade           String
+  school          String
+  location        String
+  background      String
+  dream           String
+  photoColor      String           @default("#f59e0b")
+  status          String           @default("AVAILABLE") // AVAILABLE | SUPPORTED | GRADUATED
+  progressPercent Int              @default(0)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  donations       Donation[]
+  updates         ProgressUpdate[]
+}
+
+model Woman {
+  id              String           @id @default(cuid())
+  name            String
+  age             Int
+  location        String
+  familyInfo      String
+  background      String
+  goal            String
+  photoColor      String           @default("#ec4899")
+  status          String           @default("AVAILABLE") // AVAILABLE | SUPPORTED | EMPLOYED
+  progressPercent Int              @default(0)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  donations       Donation[]
+  updates         ProgressUpdate[]
+}
+
+model Donation {
+  id             String   @id @default(cuid())
+  donorId        String
+  childId        String?
+  womanId        String?
+  packageId      String?
+  amountUSD      Float
+  amountBDT      Float
+  paymentMethod  String   @default("ONLINE") // ONLINE | OFFLINE
+  paymentStatus  String   @default("PENDING") // PENDING | COMPLETED | FAILED
+  transactionId  String?
+  donorMessage   String?
+  anonymous      Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  donor  Donor  @relation(fields: [donorId], references: [id], onDelete: Cascade)
+  child  Child?  @relation(fields: [childId], references: [id], onDelete: SetNull)
+  woman  Woman?  @relation(fields: [womanId], references: [id], onDelete: SetNull)
+
+  @@index([donorId])
+  @@index([childId])
+  @@index([womanId])
+}
+
+model ProgressUpdate {
+  id        String   @id @default(cuid())
+  childId   String?
+  womanId   String?
+  title     String
+  content   String
+  photoColor String  @default("#14b8a6")
+  milestone Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  child Child? @relation(fields: [childId], references: [id], onDelete: Cascade)
+  woman Woman? @relation(fields: [womanId], references: [id], onDelete: Cascade)
+
+  @@index([childId])
+  @@index([womanId])
+}
+
+model SiteContent {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}
+
+model Package {
+  id              String  @id @default(cuid())
+  name            String
+  description     String
+  priceUSD        Float
+  priceBDT        Float
+  childBenefit    String
+  womanBenefit    String
+  imageColor      String  @default("#0d9488")
+  active          Boolean @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
