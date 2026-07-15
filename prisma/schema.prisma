@@ -5,48 +5,48 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model Admin {
   id           String   @id @default(cuid())
-  email        String   @unique
-  name         String
-  passwordHash String
-  role         String   @default("ADMIN") // ADMIN | SUPER_ADMIN
+  email        String   @unique @db.VarChar(191)
+  name         String   @db.VarChar(191)
+  passwordHash String   @db.VarChar(191)
+  role         String   @default("ADMIN") @db.VarChar(191) // ADMIN | SUPER_ADMIN
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
 
 model Donor {
   id           String      @id @default(cuid())
-  name         String
-  email        String      @unique
-  passwordHash String
-  phone        String?
-  country      String?
-  city         String?
-  avatarColor  String      @default("#0d9488")
-  bio          String?
+  name         String      @db.VarChar(191)
+  email        String      @unique @db.VarChar(191)
+  passwordHash String      @db.VarChar(191)
+  phone        String?     @db.VarChar(191)
+  country      String?     @db.VarChar(191)
+  city         String?     @db.VarChar(191)
+  avatarColor  String      @default("#0d9488") @db.VarChar(191)
+  bio          String?     @db.Text
   isPublic     Boolean     @default(true)
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
   donations    Donation[]
 }
 
 model Child {
   id              String           @id @default(cuid())
-  name            String
+  name            String           @db.VarChar(191)
   age             Int
-  gender          String           @default("female")
-  grade           String
-  school          String
-  location        String
-  background      String
-  dream           String
-  photoColor      String           @default("#f59e0b")
-  status          String           @default("AVAILABLE") // AVAILABLE | SUPPORTED | GRADUATED
+  gender          String           @default("female") @db.VarChar(191)
+  grade           String           @db.VarChar(191)
+  school          String           @db.VarChar(191)
+  location        String           @db.VarChar(191)
+  background      String           @db.Text
+  dream           String           @db.Text
+  photoColor      String           @default("#f59e0b") @db.VarChar(191)
+  status          String           @default("AVAILABLE") @db.VarChar(191) // AVAILABLE | SUPPORTED | GRADUATED
   progressPercent Int              @default(0)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
@@ -56,14 +56,14 @@ model Child {
 
 model Woman {
   id              String           @id @default(cuid())
-  name            String
+  name            String           @db.VarChar(191)
   age             Int
-  location        String
-  familyInfo      String
-  background      String
-  goal            String
-  photoColor      String           @default("#ec4899")
-  status          String           @default("AVAILABLE") // AVAILABLE | SUPPORTED | EMPLOYED
+  location        String           @db.VarChar(191)
+  familyInfo      String           @db.Text
+  background      String           @db.Text
+  goal            String           @db.Text
+  photoColor      String           @default("#ec4899") @db.VarChar(191)
+  status          String           @default("AVAILABLE") @db.VarChar(191) // AVAILABLE | SUPPORTED | EMPLOYED
   progressPercent Int              @default(0)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
@@ -73,16 +73,16 @@ model Woman {
 
 model Donation {
   id             String   @id @default(cuid())
-  donorId        String
-  childId        String?
-  womanId        String?
-  packageId      String?
+  donorId        String   @db.VarChar(191)
+  childId        String?  @db.VarChar(191)
+  womanId        String?  @db.VarChar(191)
+  packageId      String?  @db.VarChar(191)
   amountUSD      Float
   amountBDT      Float
-  paymentMethod  String   @default("ONLINE") // ONLINE | OFFLINE
-  paymentStatus  String   @default("PENDING") // PENDING | COMPLETED | FAILED
-  transactionId  String?
-  donorMessage   String?
+  paymentMethod  String   @default("ONLINE") @db.VarChar(191) // ONLINE | OFFLINE
+  paymentStatus  String   @default("PENDING") @db.VarChar(191) // PENDING | COMPLETED | FAILED
+  transactionId  String?  @db.VarChar(191)
+  donorMessage   String?  @db.Text
   anonymous      Boolean  @default(false)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
@@ -97,14 +97,14 @@ model Donation {
 }
 
 model ProgressUpdate {
-  id        String   @id @default(cuid())
-  childId   String?
-  womanId   String?
-  title     String
-  content   String
-  photoColor String  @default("#14b8a6")
-  milestone Boolean  @default(false)
-  createdAt DateTime @default(now())
+  id         String   @id @default(cuid())
+  childId    String?  @db.VarChar(191)
+  womanId    String?  @db.VarChar(191)
+  title      String   @db.VarChar(191)
+  content    String   @db.Text
+  photoColor String   @default("#14b8a6") @db.VarChar(191)
+  milestone  Boolean  @default(false)
+  createdAt  DateTime @default(now())
 
   child Child? @relation(fields: [childId], references: [id], onDelete: Cascade)
   woman Woman? @relation(fields: [womanId], references: [id], onDelete: Cascade)
@@ -115,19 +115,19 @@ model ProgressUpdate {
 
 model SiteContent {
   id    String @id @default(cuid())
-  key   String @unique
-  value String
+  key   String @unique @db.VarChar(191)
+  value String @db.Text
 }
 
 model Package {
   id              String  @id @default(cuid())
-  name            String
-  description     String
+  name            String  @db.VarChar(191)
+  description     String  @db.Text
   priceUSD        Float
   priceBDT        Float
-  childBenefit    String
-  womanBenefit    String
-  imageColor      String  @default("#0d9488")
+  childBenefit    String  @db.Text
+  womanBenefit    String  @db.Text
+  imageColor      String  @default("#0d9488") @db.VarChar(191)
   active          Boolean @default(true)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt

@@ -126,37 +126,22 @@ export function HomeView() {
   return (
     <div className="space-y-0">
       {/* ===== 1. Hero ===== */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <Image
-            src="/hero-main.png"
-            alt="Children and women studying and training together"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
-          {/* teal gradient overlay for legibility */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-primary/70 to-primary/30" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
-        </div>
-
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-20 sm:py-28 lg:py-36">
+      <section className="relative overflow-hidden bg-linear-to-b from-primary/5 to-background">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 sm:py-28 lg:grid-cols-2 lg:py-32">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="max-w-3xl"
           >
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-sm ring-1 ring-white/20">
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-300" />
+            <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary ring-1 ring-primary/15">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
               {heroBadge}
             </span>
 
-            <h1 className="mt-5 text-4xl font-bold leading-tight tracking-tight text-white text-balance sm:text-5xl lg:text-6xl">
+            <h1 className="mt-5 text-4xl font-bold leading-tight tracking-tight text-foreground text-balance sm:text-5xl lg:text-6xl">
               {heroTitle}
             </h1>
-            <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/90 text-balance sm:text-lg">
+            <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground text-balance sm:text-lg">
               {heroSubtitle}
             </p>
 
@@ -167,7 +152,6 @@ export function HomeView() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white/40 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 hover:text-white"
                 onClick={() => go('beneficiaries')}
               >
                 Meet the Beneficiaries <ArrowRight className="h-4 w-4" />
@@ -179,13 +163,42 @@ export function HomeView() {
               initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3, duration: 0.5 }}
-              className="mt-10 inline-flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl bg-white/15 px-4 py-3 text-sm font-medium text-white backdrop-blur-md ring-1 ring-white/20"
+              className="mt-10 inline-flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl border border-border bg-card px-4 py-3 text-sm font-medium text-foreground shadow-sm"
             >
-              <Sparkles className="h-4 w-4 text-amber-300" />
+              <Sparkles className="h-4 w-4 text-amber-500" />
               <span>1,650+ students</span>
-              <span className="opacity-40">·</span>
+              <span className="text-muted-foreground">·</span>
               <span>32,000+ beneficiaries since 2011</span>
             </motion.div>
+          </motion.div>
+
+          {/* hero image + trust card */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            className="relative"
+          >
+            <div className="absolute -inset-4 -z-10 rounded-3xl bg-primary/10 blur-2xl" />
+            <Image
+              src="/hero-main.png"
+              alt="A child and a woman supported by the initiative"
+              width={1600}
+              height={1200}
+              priority
+              className="aspect-4/3 w-full rounded-2xl object-cover shadow-xl ring-1 ring-border"
+            />
+            <div className="absolute -bottom-6 -left-6 hidden rounded-xl border border-border bg-card p-4 shadow-lg md:block">
+              <div className="flex items-center gap-3">
+                <div className="rounded-full bg-primary/10 p-2 text-primary">
+                  <ShieldCheck className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground">Fully transparent</p>
+                  <p className="text-sm font-semibold text-foreground">Every taka tracked</p>
+                </div>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
