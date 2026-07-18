@@ -1,23 +1,4 @@
 services:
-  db:
-    image: mysql:8.0
-    container_name: sombhabona-db
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: sombhabona_donation
-      MYSQL_USER: sombhabona
-      MYSQL_PASSWORD: sombhabona123
-    ports:
-      - "3307:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-
   app:
     build:
       context: .
@@ -27,10 +8,6 @@ services:
     ports:
       - "8071:3000"
     environment:
-      DATABASE_URL: "mysql://sombhabona:sombhabona123@db:3306/sombhabona_donation"
-    depends_on:
-      db:
-        condition: service_healthy
-
-volumes:
-  mysql_data:
+      DATABASE_URL: "mysql://nowshad:ABCDefg12***@172.17.0.1:3306/SombhabonaSDC"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
